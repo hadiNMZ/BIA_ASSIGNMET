@@ -134,5 +134,5 @@ from ga_recommender import genetic_algorithm
 
 one req -> 80 generations
 
-type : static , should work also dynamicly if used along user  action
+type : static , should work also dynamicly if used along user  action (in later update )
 '''
