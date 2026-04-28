@@ -80,6 +80,10 @@ def _read_excel_records(data_dir: Path, filename: str) -> list[dict]:
     ]
 
 
+def _to_bool(value: object) -> bool:
+    return bool(int(value))
+
+
 def _load_records(data_dir: Path) -> dict[str, list[dict]]:
     users = _read_excel_records(data_dir, DATA_FILES["users"])
     products = _read_excel_records(data_dir, DATA_FILES["products"])
@@ -115,9 +119,9 @@ def _load_records(data_dir: Path) -> dict[str, list[dict]]:
             {
                 "user_id": int(record["user_id"]),
                 "product_id": int(record["product_id"]),
-                "viewed": bool(record["viewed"]),
-                "clicked": bool(record["clicked"]),
-                "purchased": bool(record["purchased"]),
+                "viewed": _to_bool(record["viewed"]),
+                "clicked": _to_bool(record["clicked"]),
+                "purchased": _to_bool(record["purchased"]),
             }
             for record in behaviors
         ],
@@ -129,6 +133,7 @@ async def import_excel_data(data_dir: Path | None = None) -> dict[str, int]:
     records = _load_records(data_dir)
 
     await create_tables()
+    print("Craeted the Tables.")
 
     async with engine.begin() as conn:
         await conn.execute(
