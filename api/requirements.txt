@@ -8,10 +8,14 @@ anyio==4.13.0
     # via starlette
 asyncpg==0.31.0
     # via -r api/requirements.in
+click==8.3.3
+    # via uvicorn
 fastapi==0.136.1
     # via -r api/requirements.in
 greenlet==3.5.0
     # via sqlalchemy
+h11==0.16.0
+    # via uvicorn
 idna==3.13
     # via anyio
 numpy==2.4.4
@@ -43,3 +47,5 @@ typing-inspection==0.4.2
     # via
     #   fastapi
     #   pydantic
+uvicorn==0.46.0
+    # via -r api/requirements.in

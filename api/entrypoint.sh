@@ -1,6 +1,4 @@
 #!/usr/bin/env sh
 set -eu
 
-# echo "API entrypoint placeholder. Replace this script with the API startup command when ready."
-
-uv run main.py
+uv run uvicorn main:app --host 0.0.0.0 --port 8000
