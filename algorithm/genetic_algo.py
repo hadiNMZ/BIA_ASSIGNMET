@@ -50,7 +50,6 @@ def crossover(parent1, parent2):
     for gene in parent2:
         if gene not in child:
             child.append(gene)
-
         if len(child) == size:
             break
     return child[:size]
