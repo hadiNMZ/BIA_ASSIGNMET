@@ -48,7 +48,9 @@ def crossover(parent1, parent2):
     point = random.randint(1, size - 1)
     child = parent1[:point]
     for gene in parent2:
-        if len(child) ==  size:
+        if gene not in child:
+            child.append(gene)
+        if len(child) == size:
             break
     return child[:size]
 
