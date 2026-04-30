@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
@@ -27,14 +27,22 @@ async def get_db_session():
 async def get_products(
     db: Annotated[AsyncSession, Depends(get_db_session)],
     category: str | None = None,
+    price_sort: Literal["asc", "desc"] | None = None,
     page: Annotated[int, Query(ge=1)] = 1,
     page_size: Annotated[int, Query(ge=1, le=100)] = 20,
 ):
     """Return products with optional category filtering and pagination."""
-    statement = select(Product).order_by(Product.product_id)
+    statement = select(Product)
 
     if category:
         statement = statement.where(Product.category == category)
+
+    if price_sort == "asc":
+        statement = statement.order_by(Product.price.asc(), Product.product_id)
+    elif price_sort == "desc":
+        statement = statement.order_by(Product.price.desc(), Product.product_id)
+    else:
+        statement = statement.order_by(Product.product_id)
 
     statement = statement.offset((page - 1) * page_size).limit(page_size)
     products = (await db.scalars(statement)).all()
