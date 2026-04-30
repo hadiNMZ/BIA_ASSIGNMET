@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from core.import_data import import_excel_data
-from routes import auth, products, users, recommend
+from routes import auth, behaviors, products, users, recommend
 
 
 @asynccontextmanager
@@ -19,3 +19,4 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(products.router)
 app.include_router(recommend.router)
+app.include_router(behaviors.router)
