@@ -1,7 +1,7 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, Field
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,16 +15,7 @@ router = APIRouter()
 
 class BehaviorUpsertRequest(BaseModel):
     product_id: int
-    viewed: bool | None = None
-    clicked: bool | None = None
-    purchased: bool | None = None
-
-    @model_validator(mode="after")
-    def require_behavior_type(self):
-        if self.viewed is None and self.clicked is None and self.purchased is None:
-            raise ValueError("At least one behavior type is required")
-
-        return self
+    actions: list[Literal["viewed", "clicked", "purchased"]] = Field(min_length=1)
 
 
 @router.post("/behaviors", response_model=schemas.Behavior)
@@ -34,14 +25,19 @@ async def upsert_behavior(
     db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     """Create or update one user/product behavior row."""
+    actions = set(behavior_request.actions)
     insert_values = {
         "user_id": current_user_id,
         "product_id": behavior_request.product_id,
-        "viewed": behavior_request.viewed or False,
-        "clicked": behavior_request.clicked or False,
-        "purchased": behavior_request.purchased or False,
+        "viewed": "viewed" in actions,
+        "clicked": "clicked" in actions,
+        "purchased": "purchased" in actions,
     }
     insert_statement = insert(Behavior).values(**insert_values)
+    
+    # Using OR here to only convert false values to True
+
+    # Also this makes it idempotent to one behavior can't be created twice.
     update_values = {
         "viewed": Behavior.viewed | insert_statement.excluded.viewed,
         "clicked": Behavior.clicked | insert_statement.excluded.clicked,
