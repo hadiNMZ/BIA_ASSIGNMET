@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from core.import_data import import_excel_data
-from routes import auth, products, users
+from routes import auth, products, users, recommend
 
 
 @asynccontextmanager
