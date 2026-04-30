@@ -2,3 +2,5 @@
 files/
 test.py
 __pycache__
+api/algorithm
+.vscode/

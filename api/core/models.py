@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, ForeignKey, Integer, String
+from sqlalchemy import Boolean, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import Base
@@ -40,6 +40,13 @@ class Rating(Base):
 
 class Behavior(Base):
     __tablename__ = "behaviors"
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "product_id",
+            name="uq_behaviors_user_id_product_id",
+        ),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"), index=True)

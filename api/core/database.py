@@ -17,6 +17,11 @@ class Base(DeclarativeBase):
     pass
 
 
+async def get_db_session():
+    async with async_session() as session:
+        yield session
+
+
 async def create_tables():
     import core.models
 
