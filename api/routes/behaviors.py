@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, model_validator
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -14,7 +14,6 @@ router = APIRouter()
 
 
 class BehaviorUpsertRequest(BaseModel):
-    user_id: int
     product_id: int
     viewed: bool | None = None
     clicked: bool | None = None
@@ -35,14 +34,8 @@ async def upsert_behavior(
     db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     """Create or update one user/product behavior row."""
-    if behavior_request.user_id != current_user_id:
-        raise HTTPException(
-            status_code=403,
-            detail="Cannot create behavior for another user",
-        )
-
     insert_values = {
-        "user_id": behavior_request.user_id,
+        "user_id": current_user_id,
         "product_id": behavior_request.product_id,
         "viewed": behavior_request.viewed or False,
         "clicked": behavior_request.clicked or False,
