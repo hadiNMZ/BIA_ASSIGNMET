@@ -10,10 +10,18 @@ from core.database import get_db_session
 from core.models import Product
 from routes.auth import get_current_user_id
 
-router = APIRouter()
+router = APIRouter(tags=["Recommendations"])
 
 
-@router.get("/recommended-products", response_model=list[schemas.Product])
+@router.get(
+    "/recommended-products",
+    response_model=list[schemas.Product],
+    summary="Get recommended products",
+    description=(
+        "Returns recommended products for the authenticated user. This is currently "
+        "a placeholder that returns up to 5 random products from IDs 1 through 1000."
+    ),
+)
 async def get_recommended_products(
     current_user_id: Annotated[int, Depends(get_current_user_id)],
     db: Annotated[AsyncSession, Depends(get_db_session)],

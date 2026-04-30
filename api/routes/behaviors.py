@@ -10,15 +10,36 @@ from core.database import get_db_session
 from core.models import Behavior
 from routes.auth import get_current_user_id
 
-router = APIRouter()
+router = APIRouter(tags=["Behaviors"])
+
+BehaviorAction = Literal["viewed", "clicked", "purchased"]
 
 
 class BehaviorUpsertRequest(BaseModel):
-    product_id: int
-    actions: list[Literal["viewed", "clicked", "purchased"]] = Field(min_length=1)
+    product_id: int = Field(
+        description="Product that the authenticated user interacted with.",
+        examples=[42],
+    )
+    actions: list[BehaviorAction] = Field(
+        min_length=1,
+        description=(
+            "One or more behavior actions to record. Actions only set values to true; "
+            "there is no API operation for setting a behavior back to false."
+        ),
+        examples=[["viewed", "clicked"]],
+    )
 
 
-@router.post("/behaviors", response_model=schemas.Behavior)
+@router.post(
+    "/behaviors",
+    response_model=schemas.Behavior,
+    summary="Record product behavior",
+    description=(
+        "Creates or updates the behavior row for the authenticated user and product. "
+        "The `(user_id, product_id)` pair is unique, so repeated calls merge actions "
+        "into the existing row."
+    ),
+)
 async def upsert_behavior(
     behavior_request: BehaviorUpsertRequest,
     current_user_id: Annotated[int, Depends(get_current_user_id)],
@@ -34,10 +55,7 @@ async def upsert_behavior(
         "purchased": "purchased" in actions,
     }
     insert_statement = insert(Behavior).values(**insert_values)
-    
-    # Using OR here to only convert false values to True
-
-    # Also this makes it idempotent to one behavior can't be created twice.
+    # OR keeps existing true flags true while applying new actions idempotently.
     update_values = {
         "viewed": Behavior.viewed | insert_statement.excluded.viewed,
         "clicked": Behavior.clicked | insert_statement.excluded.clicked,
