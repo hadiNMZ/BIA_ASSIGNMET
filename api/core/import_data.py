@@ -84,11 +84,38 @@ def _to_bool(value: object) -> bool:
     return bool(int(value))
 
 
+def _dedupe_behaviors(records: list[dict]) -> list[dict]:
+    deduped: dict[tuple[int, int], dict] = {}
+
+    for record in records:
+        key = (record["user_id"], record["product_id"])
+        if key not in deduped:
+            deduped[key] = record
+            continue
+
+        deduped[key]["viewed"] = deduped[key]["viewed"] or record["viewed"]
+        deduped[key]["clicked"] = deduped[key]["clicked"] or record["clicked"]
+        deduped[key]["purchased"] = deduped[key]["purchased"] or record["purchased"]
+
+    return list(deduped.values())
+
+
 def _load_records(data_dir: Path) -> dict[str, list[dict]]:
     users = _read_excel_records(data_dir, DATA_FILES["users"])
     products = _read_excel_records(data_dir, DATA_FILES["products"])
     ratings = _read_excel_records(data_dir, DATA_FILES["ratings"])
     behaviors = _read_excel_records(data_dir, DATA_FILES["behaviors"])
+
+    behavior_records = [
+        {
+            "user_id": int(record["user_id"]),
+            "product_id": int(record["product_id"]),
+            "viewed": _to_bool(record["viewed"]),
+            "clicked": _to_bool(record["clicked"]),
+            "purchased": _to_bool(record["purchased"]),
+        }
+        for record in behaviors
+    ]
 
     return {
         "users": [
@@ -115,16 +142,7 @@ def _load_records(data_dir: Path) -> dict[str, list[dict]]:
             }
             for record in ratings
         ],
-        "behaviors": [
-            {
-                "user_id": int(record["user_id"]),
-                "product_id": int(record["product_id"]),
-                "viewed": _to_bool(record["viewed"]),
-                "clicked": _to_bool(record["clicked"]),
-                "purchased": _to_bool(record["purchased"]),
-            }
-            for record in behaviors
-        ],
+        "behaviors": _dedupe_behaviors(behavior_records),
     }
 
 
@@ -140,6 +158,12 @@ async def import_excel_data(data_dir: Path | None = None) -> dict[str, int]:
             text(
                 "TRUNCATE TABLE behaviors, ratings, products, users "
                 "RESTART IDENTITY CASCADE"
+            )
+        )
+        await conn.execute(
+            text(
+                "CREATE UNIQUE INDEX IF NOT EXISTS uq_behaviors_user_id_product_id "
+                "ON behaviors (user_id, product_id)"
             )
         )
         await conn.execute(insert(User), records["users"])
