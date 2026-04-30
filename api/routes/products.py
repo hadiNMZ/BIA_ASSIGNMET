@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core import schemas
 from core.database import async_session
 from core.models import Product
+from routes.auth import get_current_user_id
 
 router = APIRouter()
 
@@ -25,6 +26,7 @@ async def get_db_session():
 
 @router.get("/products", response_model=ProductListResponse)
 async def get_products(
+    current_user_id: Annotated[int, Depends(get_current_user_id)],
     db: Annotated[AsyncSession, Depends(get_db_session)],
     category: str | None = None,
     price_sort: Literal["asc", "desc"] | None = None,
@@ -52,6 +54,7 @@ async def get_products(
 
 @router.get("/products/categories", response_model=list[str])
 async def get_product_categories(
+    current_user_id: Annotated[int, Depends(get_current_user_id)],
     db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     """Return all available product categories."""
@@ -62,6 +65,7 @@ async def get_product_categories(
 @router.get("/products/{product_id}", response_model=schemas.Product)
 async def get_product(
     product_id: int,
+    current_user_id: Annotated[int, Depends(get_current_user_id)],
     db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     """Return one product by ID."""

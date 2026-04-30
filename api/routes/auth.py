@@ -20,7 +20,7 @@ class LoginResponse(BaseModel):
 
 def get_current_user_id(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
-) -> str:
+) -> int:
     """Extract the user_id part from the fake auth token."""
     token = credentials.credentials
     user_id, separator, random_part = token.partition("_")
@@ -28,7 +28,10 @@ def get_current_user_id(
     if not user_id or not separator or not random_part:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    return user_id
+    try:
+        return int(user_id)
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 
 @router.post("/login", response_model=LoginResponse)
