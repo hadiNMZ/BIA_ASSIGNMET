@@ -6,9 +6,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import schemas
+from core.database import get_db_session
 from core.models import Product
 from routes.auth import get_current_user_id
-from routes.products import get_db_session
 
 router = APIRouter()
 

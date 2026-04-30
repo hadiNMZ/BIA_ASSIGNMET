@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import schemas
-from core.database import async_session
+from core.database import get_db_session
 from core.models import Product
 from routes.auth import get_current_user_id
 
@@ -17,11 +17,6 @@ class ProductListResponse(BaseModel):
     items: list[schemas.Product]
     page: int
     page_size: int
-
-
-async def get_db_session():
-    async with async_session() as session:
-        yield session
 
 
 @router.get("/products", response_model=ProductListResponse)

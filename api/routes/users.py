@@ -4,16 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core import schemas
-from core.database import async_session
+from core.database import get_db_session
 from core.models import User
 from routes.auth import get_current_user_id
 
 router = APIRouter()
-
-
-async def get_db_session():
-    async with async_session() as session:
-        yield session
 
 
 @router.get("/me", response_model=schemas.User)
