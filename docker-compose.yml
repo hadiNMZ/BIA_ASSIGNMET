@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: api/Dockerfile
     ports:
-      - "127.0.0.1:8050:8000"
+      - "127.0.0.1:8050:8050"
     environment:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/bia
     volumes:
