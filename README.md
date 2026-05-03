@@ -1,5 +1,26 @@
 # BIA Assignment
 
+This project is an assignment for the Syrian Virtual University, Term S25.
+
+Subject: BIA - Intelligent Algorithm
+
+## Tutor:
+Issam Mohamad Salman
+
+## Assignees
+
+| Name | ID | Arabic Name | Class | GitHub Profile |
+| --- | --- | --- | --- | --- |
+| Abdulhade Al Ahmad | abdulhade_215220 | عبد الهادي الاحمد | C5 | [AbdulhadeAhmad](https://github.com/AbdulhadeAhmad) |
+| Lara Daoud | Lara_261114 | لارا داود | C4 | [laradaood04](https://github.com/laradaood04) |
+| Hadi Nouaman | Hadi_1903 | هادي نعمان | C4 | [hadiNMZ](https://github.com/hadiNMZ) |
+| Nour Kurdi | nour_190317 | نور كردي | C4 | [nourkurdi1122](https://github.com/nourkurdi1122) |
+
+---
+
+## Live Project URLs:
+
+
 Webpage URL: https://svu.store.abdulha.de
 
 API Base URL: https://api.svu.store.abdulha.de
@@ -30,50 +51,4 @@ To stop it:
 
 ```bash
 docker compose down
-```
-
-## Server Deployment
-
-This is the basic server deployment flow:
-
-1. SSH into the server.
-
-2. Go to the project folder:
-
-```bash
-cd /path/to/BIA_ASSIGNMET
-```
-
-3. Start the API and database:
-
-```bash
-docker compose up -d --build
-```
-
-4. The API container listens on port `8050`, and Docker binds it to `127.0.0.1:8050`.
-
-5. Add the Nginx config:
-
-```bash
-sudo cp api/nginx.conf /etc/nginx/sites-available/bia-api
-sudo ln -s /etc/nginx/sites-available/bia-api /etc/nginx/sites-enabled/bia-api
-```
-
-6. Check and reload Nginx:
-
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-7. Make sure the domain points to the server:
-
-```text
-api.svu.store.abdulha.de
-```
-
-8. After deployment, check:
-
-```text
-https://api.svu.store.abdulha.de/docs
 ```
