@@ -4,3 +4,8 @@ test.py
 __pycache__
 api/algorithm
 .vscode/
+.idea/
+__pycache__/
+*.pyc
+.venv/
+venv/
