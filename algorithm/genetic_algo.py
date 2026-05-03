@@ -129,6 +129,33 @@ def genetic_algorithm(
 
     return best_chromosome, best_score, history
 
+def compute_score_matrix(ratings, behavior):
+
+    beh = behavior.copy()
+
+    # score each action
+    beh["beh_score"] = (
+        beh["purchased"] * 3.0
+        + beh["clicked"]   * 1.0
+        + beh["viewed"]    * 0.5
+    )
+
+    # pivot behavior into user x product table
+    beh_pivot = beh.pivot_table(
+        index="user_id", columns="product_id",
+        values="beh_score", aggfunc="sum", fill_value=0
+    )
+
+    # pivot ratings into user x product table
+    rat_pivot = ratings.pivot_table(
+        index="user_id", columns="product_id",
+        values="rating", aggfunc="mean", fill_value=0
+    )
+
+    # combine both
+    return beh_pivot.add(rat_pivot, fill_value=0)
+
+
  # end ( for now )
 '''
 how can backend calls it (once per request):

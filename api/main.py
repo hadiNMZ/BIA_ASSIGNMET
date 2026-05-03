@@ -14,7 +14,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="BIA Placeholder API",
+    title="Genetic Algorithm Recommender",
     description=(
         "Backend API for users, products, behavior tracking, and placeholder "
         "recommendations. Protected endpoints use a fake bearer token returned "
