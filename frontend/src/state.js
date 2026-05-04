@@ -11,6 +11,8 @@ export const state = {
   user: null,
   categories: [],
   recommended: [],
+  /** From /recommended-products when object-shaped: { fitness_score, fitness_history } */
+  recommendationFitness: { fitness_score: null, fitness_history: [] },
   products: [],
   selectedCategory: "All",
   priceSort: "",

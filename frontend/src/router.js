@@ -183,7 +183,16 @@ async function loadCategories() {
 
 async function loadRecommended() {
   const data = await getRecommendedProducts();
-  state.recommended = Array.isArray(data) ? data : data?.products ?? [];
+  if (Array.isArray(data)) {
+    state.recommended = data;
+    state.recommendationFitness = { fitness_score: null, fitness_history: [] };
+  } else {
+    state.recommended = data?.products ?? [];
+    state.recommendationFitness = {
+      fitness_score: data?.fitness_score ?? null,
+      fitness_history: Array.isArray(data?.fitness_history) ? data.fitness_history : [],
+    };
+  }
 }
 
 async function loadProducts() {
