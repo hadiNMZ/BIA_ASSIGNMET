@@ -13,6 +13,21 @@ services:
       postgres:
         condition: service_healthy
 
+  frontend:
+    image: node:24-bookworm-slim
+    working_dir: /app/frontend
+    command: ["node", "dev-server.mjs"]
+    ports:
+      - "127.0.0.1:5173:5173"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 5173
+      API_BASE: https://api.svu.store.abdulha.de
+    volumes:
+      - ./frontend:/app/frontend:ro
+    depends_on:
+      - api
+
   postgres:
     image: postgres:18
     environment:

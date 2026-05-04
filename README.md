@@ -42,6 +42,14 @@ The local API will be available here:
 http://127.0.0.1:8050
 ```
 
+The local frontend will be available here:
+
+```text
+http://127.0.0.1:5173
+```
+
+Frontend requests to `/api` are proxied to the API container.
+
 Local Swagger docs:
 
 ```text

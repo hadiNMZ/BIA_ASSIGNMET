@@ -15,7 +15,7 @@ from core.models import Product
 from core.algorithm_importers import AlgorithmDataImporter
 from routes.auth import get_current_user_id
 
-from genetic_algo import genetic_algorithm, compute_score_matrix
+from algorithm.genetic_algo import genetic_algorithm, compute_score_matrix
 
 router = APIRouter(tags=["Recommendations"])
 
