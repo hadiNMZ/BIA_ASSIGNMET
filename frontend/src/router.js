@@ -182,7 +182,8 @@ async function loadCategories() {
 }
 
 async function loadRecommended() {
-  state.recommended = await getRecommendedProducts();
+  const data = await getRecommendedProducts();
+  state.recommended = Array.isArray(data) ? data : data?.products ?? [];
 }
 
 async function loadProducts() {
