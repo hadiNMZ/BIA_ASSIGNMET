@@ -47,3 +47,9 @@ class Behavior(BehaviorBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int = Field(description="Unique behavior row identifier.")
+
+class RecommendationResponse(BaseModel):
+    products:        list[Product] = Field(description="List of recommended products.")
+    fitness_score:   float         = Field(description="Final GA fitness score.")
+    fitness_history: list[float]   = Field(description="Fitness score per generation, used for chart.")
+
