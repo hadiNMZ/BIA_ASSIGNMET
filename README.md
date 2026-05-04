@@ -15,6 +15,7 @@ Issam Mohamad Salman
 | Lara Daoud | Lara_261114 | لارا داود | C4 | [laradaood04](https://github.com/laradaood04) |
 | Hadi Nouaman | Hadi_190304 | هادي نعمان | C4 | [hadiNMZ](https://github.com/hadiNMZ) |
 | Nour Kurdi | nour_190317 | نور كردي | C4 | [nourkurdi1122](https://github.com/nourkurdi1122) |
+| Naser Dakhel | naser_156470 | ناصر داخل | C4 | [naser-da](https://github.com/naser-da) |
 
 ---
 
@@ -40,6 +41,14 @@ The local API will be available here:
 ```text
 http://127.0.0.1:8050
 ```
+
+The local frontend will be available here:
+
+```text
+http://127.0.0.1:5173
+```
+
+Frontend requests to `/api` are proxied to the API container.
 
 Local Swagger docs:
 

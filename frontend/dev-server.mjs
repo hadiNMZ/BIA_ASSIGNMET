@@ -1,11 +1,12 @@
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
-import { extname, join, normalize, resolve } from "node:path";
+import { dirname, extname, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const host = "127.0.0.1";
-const port = 5173;
-const apiBase = "https://api.svu.store.abdulha.de";
-const root = resolve("C:/Users/user/Documents/BIA_ASSIGNMET/frontend");
+const host = process.env.HOST || "127.0.0.1";
+const port = Number(process.env.PORT || 5173);
+const apiBase = process.env.API_BASE || "http://127.0.0.1:8050";
+const root = dirname(fileURLToPath(import.meta.url));
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -14,7 +15,7 @@ const types = {
 };
 
 const server = createServer(async (request, response) => {
-  const url = new URL(request.url || "/", `http://${host}:${port}`);
+  const url = new URL(request.url || "/", `http://localhost:${port}`);
 
   if (url.pathname.startsWith("/api/")) {
     await proxyApiRequest(request, response, url);
@@ -71,4 +72,5 @@ async function proxyApiRequest(request, response, url) {
 
 server.listen(port, host, () => {
   console.log(`Frontend server running at http://${host}:${port}`);
+  console.log(`Proxying /api requests to ${apiBase}`);
 });
