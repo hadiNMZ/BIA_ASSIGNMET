@@ -1,9 +1,10 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from core.import_data import import_excel_data
-from routes import auth, behaviors, products, users, recommend
+from routes import auth, behaviors, products, ratings, users, recommend
 
 
 @asynccontextmanager
@@ -45,8 +46,26 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+        "https://svu.store.abdulha.de",
+        "null",
+    ],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(products.router)
+app.include_router(ratings.router)
 app.include_router(recommend.router)
 app.include_router(behaviors.router)

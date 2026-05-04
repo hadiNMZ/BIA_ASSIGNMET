@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SVU Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              store: {
+                bg: "#f6f7f4",
+                ink: "#1f2933",
+                muted: "#66737a",
+                line: "#d9ded8",
+                teal: "#0f766e",
+                tealDark: "#115e59",
+                tealSoft: "#d9f2ed",
+                amber: "#b7791f",
+              },
+            },
+            boxShadow: {
+              soft: "0 18px 45px rgba(31, 41, 51, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="bg-store-bg text-store-ink antialiased">
+    <div id="app"></div>
+    <script src="./src/app.js?v=11" type="module"></script>
+  </body>
+</html>
